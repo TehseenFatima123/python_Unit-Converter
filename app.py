@@ -1,34 +1,51 @@
-
 import streamlit as st
 
-def Convert_units(value: float, unit_from:str, unit_to:str):
-    if unit_from == "kilometers" and unit_to == "meters":
-        return value * 1000
-    elif unit_from == "meters"and unit_to == "kilometers":
-        return value * 0.001
-    elif unit_from == "centimeters"and unit_to == "meters":
-        return value * 0.01 
-    elif unit_from == "meters" and unit_to == "centimeters":
-        return value * 100
-    else:
-        return "conversion is not possible"
+def check_password(password):
+    score = 0
+    tips = []
 
-#result1 = Convert_units(1.5, "kilometers", "meters")
-#print ("The value in meter is :", result1)
-#result2 = Convert_units(1.0, "meters", "centimeters")
-#print ("The value in meter is :", result2)
+    if len(password) >= 8:
+        score += 1
+    else:
+        tips.append("😡 Use at least 8 characters.")
+
+    if any(c.isupper() for c in password):
+        score += 1
+    else:
+        tips.append("😠 Include at least one uppercase letter.")
+
+    if any(c.islower() for c in password):
+        score += 1
+    else:
+        tips.append("☹️ Include at least one lowercase letter.")
+
+    if any(c.isdigit() for c in password):
+        score += 1
+    else:
+        tips.append("🙂 Include at least one digit (0-9).")
+
+    if any(c in "@!#$&*" for c in password):
+        score += 1
+    else:
+        tips.append("🤩 Include a special character (@!#$&*).")
+
+    return score, tips
 
 def main():
-    st.title("Unit Converter")
-    st.write("*Welcome To Unit Converter*")
-    value =  st.number_input("Enter the value:", min_value=0.0)
-    unit_from = st.text_input("Enter the unit you want to convert from (e.g. meters, kilometers, centimeters:")
-    unit_to = st.text_input ("Enter the value you want to convert in (e.g. meters, centimeters, kilometers):")
-   # print ("value", value)
-    #print ("unit_from", unit_from)
-   # print ("unit_to", unit_to)
-    if st.button("Convert"):
-        result = Convert_units(value, unit_from, unit_to)
-        st.write("Converted value is:", result)
-main()
+    st.title("🔐 Password Strength Meter")
+    password = st.text_input("🗝 Enter password", type="password")
 
+    if password:
+        score, tips = check_password(password)
+
+        if score == 5:
+            st.success("✅ Strong Password! Secure and Safe.")
+        elif score in [3, 4]:
+            st.warning("🚫 Moderate Password! Improve it.")
+        else:
+            st.error("❌ Weak Password! Follow these steps:")
+            for tip in tips:
+                st.write(tip)
+
+if __name__ == "__main__":
+    main()
